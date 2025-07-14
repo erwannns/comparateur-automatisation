@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Comparateur Automatisation</title>
+  <style>
+    :root {
+      --primary: #4CAF50;
+      --secondary: #f0f4f8;
+      --text: #333;
+      --text-light: #666;
+      --white: #fff;
+      --radius: 12px;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--secondary);
+      margin: 0;
+      padding: 40px 20px;
+      color: var(--text);
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background-color: var(--white);
+      padding: 30px;
+      border-radius: var(--radius);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    h2 {
+      margin-top: 0;
+      color: var(--primary);
+      font-size: 1.8em;
+      text-align: center;
+    }
+
+    label {
+      font-weight: 500;
+      margin-top: 10px;
+      display: block;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-top: 8px;
+      margin-bottom: 16px;
+      border: 1px solid #ccc;
+      border-radius: var(--radius);
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+
+    button {
+      width: 100%;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 14px;
+      font-size: 16px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #3e8e41;
+    }
+
+    .result {
+      margin-top: 30px;
+      background-color: #fafafa;
+      border-left: 4px solid var(--primary);
+      padding: 20px;
+      border-radius: var(--radius);
+    }
+
+    h3 {
+      margin-top: 20px;
+      margin-bottom: 8px;
+      color: var(--text-light);
+      font-size: 1.1em;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 4px;
+    }
+
+    ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    ul li {
+      margin-bottom: 10px;
+      font-size: 1em;
+    }
+
+    em {
+      color: var(--text-light);
+      font-size: 0.9em;
+      display: block;
+      margin-top: 15px;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>💡 Combien vaut votre automatisation ?</h2>
+    <label for="weeklyHours">Temps hebdomadaire - Heures :</label>
+    <input type="number" id="weeklyHours" placeholder="Ex: 1" min="0" step="1">
+    <label for="weeklyMinutes">Temps hebdomadaire - Minutes :</label>
+    <input type="number" id="weeklyMinutes" placeholder="Ex: 30" min="0" max="59" step="1">
+    <button onclick="calculate()">Calculer</button>
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    function calculate() {
+      const smic = 11.88; // SMIC brut horaire
+      const weeklyHours = parseFloat(document.getElementById("weeklyHours").value) || 0;
+      const weeklyMinutes = parseFloat(document.getElementById("weeklyMinutes").value) || 0;
+
+      const totalWeeklyHours = weeklyHours + (weeklyMinutes / 60);
+
+      if (totalWeeklyHours <= 0) {
+        document.getElementById("result").innerHTML = "⛔ Veuillez entrer un temps valide.";
+        return;
+      }
+
+      // Calculs temps
+      const dailyHours = totalWeeklyHours / 5; // 5 jours ouvrés
+      const monthlyHours = totalWeeklyHours * 4; // 4 semaines/mois
+      const annualHours = totalWeeklyHours * 46; // 46 semaines/an
+
+      // Calculs valeur
+      const dailyValue = (dailyHours * smic).toFixed(2);
+      const weeklyValue = (totalWeeklyHours * smic).toFixed(2);
+      const monthlyValue = (monthlyHours * smic).toFixed(2);
+      const annualValue = (annualHours * smic).toFixed(2);
+
+      document.getElementById("result").innerHTML = `
+        <h3>💰 Économie financière :</h3>
+        <ul>
+          <li> <strong>${dailyValue} €</strong> / jour</li>
+          <li><strong>${weeklyValue} €</strong> / semaine</li>
+          <li><strong>${monthlyValue} €</strong> / mois</li>
+          <li> <strong>${annualValue} €</strong> / an</li>
+        </ul>
+
+        <h3>⏱ Temps économisé :</h3>
+        <ul>
+          <li> <strong>${dailyHours.toFixed(2)} h</strong> / jour</li>
+          <li><strong>${totalWeeklyHours.toFixed(2)} h</strong> / semaine</li>
+          <li><strong>${monthlyHours.toFixed(2)} h</strong> / mois</li>
+          <li> <strong>${annualHours.toFixed(2)} h</strong> / an</li>
+        </ul>
+
+        <em>Basé sur un SMIC brut horaire 2025 de ${smic} €</em>
+      `;
+    }
+  </script>
+</body>
+</html>
